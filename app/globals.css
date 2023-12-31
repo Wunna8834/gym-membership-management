@@ -1,27 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  h3 {
+    @apply text-white font-bold text-xl tracking-wide
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .main-container {
+    @apply flex min-h-screen flex-1 flex-col items-center px-6 pb-10 pt-20 max-md:pb-32 sm:px-10 bg-[#111315];
+  }
+
+  .topbar {
+    @apply fixed top-0 z-30 flex w-full items-center justify-between px-6 py-3 bg-[#212326];
+  }
+
+  .leftsidebar {
+    @apply sticky left-0 top-0 z-20 flex h-screen w-[15%] flex-col justify-between overflow-auto  bg-[#111315]  pb-5 pt-28 max-md:hidden;
+  }
+
+  .leftsidebar_link {
+    @apply  text-slate-300 p-4 rounded-md;
+  }
+
+  .rightsidebar {
+    @apply sticky right-0 top-0 z-20 flex h-screen w-[15%] flex-col justify-between bg-[#111315] gap-9 overflow-auto px-3 pb-6 pt-16 max-xl:hidden;
+  }
+
+  .bottombar {
+    @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-red-600  p-4 backdrop-blur-lg xs:px-7 md:hidden;
+  }
+
+  .bottombar_container {
+    @apply flex items-center justify-between gap-3 xs:gap-5;
+  }
+
+  .bottombar_link {
+    @apply relative flex flex-col items-center gap-2 rounded-lg p-2 sm:flex-1 sm:px-2 sm:py-2.5;
+  }
+
+  .action-button {
+    @apply bg-[#2d2d2d] hover:bg-slate-300
+  }
+
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 2px;
+  }
 }
