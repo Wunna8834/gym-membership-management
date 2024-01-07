@@ -27,23 +27,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Gender, Payment, formSchema } from "@/utils/validation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { calculateExpireDate } from "@/utils/dates";
 const page = () => {
-  const [isPending, setIsPending] = useState<boolean>(false)
-  const router = useRouter()
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "Wunna",
-      gender: Gender.Male,
-      phoneNumber: "",
-      address: "",
-      paymentType: Payment.One_Month
+
+      paymentType: Payment.One_Month,
     },
   });
   async function handleSubmit(values: z.infer<typeof formSchema>) {
-    const {name, gender, phoneNumber, address, paymentType} = values
+    const { name, gender, phoneNumber, address, paymentType } = values;
+    const expireDate = calculateExpireDate(paymentType)
     try {
-      setIsPending(true)
+      setIsPending(true);
       const res = await fetch("/api/customer/new", {
         method: "POST",
         body: JSON.stringify({
@@ -52,11 +53,14 @@ const page = () => {
           phoneNumber: phoneNumber,
           address: address,
           paymentType: paymentType,
+          expireDate: expireDate.toISOString()
         }),
       });
       if (res.ok) {
-        setIsPending(false)
-        router.push("/")
+        const result = await res.json()
+        const {data} = await result
+        console.log(data)
+        router.push(`/analytics/${data._id}?name=${data.name}&gender=${data.gender}&expireDate=${data.expireDate}`)
       }
     } catch (error) {
       console.log("Frontend Error", error);
@@ -148,7 +152,12 @@ const page = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isPending} className="bg-violet-800" size="lg">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="bg-violet-800"
+          size="lg"
+        >
           Save
         </Button>
       </form>

@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogClose,
@@ -24,15 +25,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Submit from "../buttons/Submit";
-import { useRouter } from "next/navigation";
+import { useReducer } from "react";
+import { INITIAL_STATE, customerReducer } from "@/reducer/customerReducer";
+import { calculateExpireDate } from "@/utils/dates";
 interface Props {
   _id: string;
   name: string;
   paymentType: string;
+  onEditSuccess: () => void
 }
 
-const EditMember = ({ _id, name, paymentType }: Props) => {
-  const router = useRouter()
+const EditMember = ({ _id, name, paymentType, onEditSuccess}: Props) => {
+  const [state, dispatch] = useReducer(customerReducer, INITIAL_STATE);
   const form = useForm<z.infer<typeof paymentSchema>>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -40,21 +44,33 @@ const EditMember = ({ _id, name, paymentType }: Props) => {
     },
   });
   async function handleSubmit(values: z.infer<typeof paymentSchema>) {
-    console.log(values.paymentType);
+    const expireDate = calculateExpireDate(values.paymentType)
     try {
+
       const res = await fetch(`/api/customer/${_id}`, {
         method: "PATCH",
         body: JSON.stringify({
           paymentType: values.paymentType,
+          expireDate: expireDate
         }),
       });
-      if(res.ok) {
-        form.reset()
+      if (res.ok) {
+        try {
+          const updatedCustomer = await res.json();
+          dispatch({ type: "EDIT_SUCCESS", payload: updatedCustomer });
+          onEditSuccess()
+        } catch (jsonError) {
+          // Handle the case where the response is not a valid JSON
+          console.error("Error parsing JSON:", jsonError);
+        }
+      } else {
+        // Handle non-OK response (e.g., HTTP error status)
+        console.error("Server error:", res.status, res.statusText);
+        dispatch({ type: "FETCH_ERROR" });
       }
     } catch (error) {
+      dispatch({ type: "FETCH_ERROR" });
       console.log(error);
-    } finally {
-      window.location.reload()
     }
   }
   return (

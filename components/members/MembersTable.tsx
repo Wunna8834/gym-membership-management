@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,33 +13,84 @@ import UserActions from "./UserActions";
 import Search from "../Search";
 import Image from "next/image";
 import Loading from "./Loading";
+import { INITIAL_STATE, customerReducer } from "@/reducer/customerReducer";
 
 interface Customer {
   _id: string;
   name: string;
+  gender: string;
   paymentType: string;
+  expireDate: Date;
 }
 
 const MembersTable = () => {
-  const [data, setData] = useState([]);
+  const [state, dispatch] = useReducer(customerReducer, INITIAL_STATE);
   const [searchValue, setSearchValue] = useState("");
+  console.log("Search value", searchValue);
+  // function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
+  //   const value = e.target.value;
+  //   setSearchValue(value);
+  // }
+  const handleSearchChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+  }, []);
 
-  console.log(data);
-  function handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
-    setSearchValue(e.target.value);
-  }
-  useEffect(() => {
-    const fetchCustomers = async () => {
+  const fetchCustomersMemoized = useMemo(() => {
+    return async () => {
       let apiURL = "/api/customer/getAllCustomers";
-      if (searchValue) {
-        apiURL += `?name=${searchValue}`;
+      const isSearch = Boolean(searchValue);
+
+      dispatch({ type: isSearch ? "SEARCH" : "FETCH_START" });
+
+      try {
+        if (isSearch) {
+          apiURL += `?name=${searchValue}`;
+        }
+
+        const res = await fetch(apiURL);
+        const result = await res.json();
+        dispatch({
+          type: isSearch ? "SEARCH_SUCCESS" : "FETCH_SUCCESS",
+          payload: result,
+        });
+      } catch (error) {
+        dispatch({ type: isSearch ? "SEARCH_ERROR" : "FETCH_ERROR" });
       }
-      const res = await fetch(apiURL);
-      const result = await res.json();
-      setData(result);
     };
-    fetchCustomers();
   }, [searchValue]);
+  // async function fetchCustomers() {
+  //   let apiURL = "/api/customer/getAllCustomers";
+  //   const isSearch = Boolean(searchValue);
+
+  //   dispatch({ type: isSearch ? "SEARCH" : "FETCH_START" });
+
+  //   try {
+  //     if (isSearch) {
+  //       apiURL += `?name=${searchValue}`;
+  //     }
+
+  //     const res = await fetch(apiURL);
+  //     const result = await res.json();
+  //     console.log("Api response", result)
+  //     dispatch({
+  //       type: isSearch ? "SEARCH_SUCCESS" : "FETCH_SUCCESS",
+  //       payload: result,
+  //     });
+  //   } catch (error) {
+  //     dispatch({ type: isSearch ? "SEARCH_ERROR" : "FETCH_ERROR" });
+  //   }
+  // }
+
+  const handleEditSuccess = () => {
+    //call back for on success of delete or edit
+    // fetchCustomers();
+    fetchCustomersMemoized()
+  };
+  useEffect(() => {
+    // fetchCustomers();
+    fetchCustomersMemoized()
+  }, [fetchCustomersMemoized]);
   return (
     <>
       <Search onSearchChange={handleSearchChange} />
@@ -54,8 +105,14 @@ const MembersTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data && data.length > 0 ? (
-            data.map((customer: Customer, index: number) => (
+          {state.loading ? (
+            <TableRow>
+              <TableCell className="w-full" colSpan={4}>
+                <Loading />
+              </TableCell>
+            </TableRow>
+          ) : state.data && state.data.length > 0 ? (
+            state.data.map((customer: Customer, index: number) => (
               <TableRow key={customer._id}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>{customer.name}</TableCell>
@@ -65,6 +122,7 @@ const MembersTable = () => {
                     _id={customer._id}
                     name={customer.name}
                     payment={customer.paymentType}
+                    onEditSuccess={handleEditSuccess}
                   />
                 </TableCell>
               </TableRow>
@@ -72,8 +130,7 @@ const MembersTable = () => {
           ) : (
             <TableRow>
               <TableCell className="w-full" colSpan={4}>
-                {/* <h2 className="font-semibold text-4xl text-center animate-pulse">Loading...Please Wait</h2> */}
-                <Loading />
+                Customer Not Found
               </TableCell>
             </TableRow>
           )}

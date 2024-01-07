@@ -7,7 +7,7 @@ const BottomBar = () => {
         {sidebarLinks.map((link) => {
           return(
             <Link href={link.route} key={link.label} className='bottombar_link'>
-              <p className=''>{link.label.split(/\s+/)[0]}</p>
+              <p className='text-white'>{link.label.split(/\s+/)[0]}</p>
             </Link>
           )
         })}

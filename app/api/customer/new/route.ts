@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const data = await req.json()
 
-  const { name, gender, phoneNumber, address, paymentType } = data
+  const { name, gender, phoneNumber, address, paymentType, expireDate } = data
   try {
     await connectToDB();
     const newCustomer = new Customer({
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
       phoneNumber,
       address,
       paymentType,
+      expireDate
     });
 
     await newCustomer.save();

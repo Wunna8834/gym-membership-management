@@ -1,4 +1,5 @@
-'use client'
+"use client";
+import { useReducer } from "react";
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -8,20 +9,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
+import { INITIAL_STATE, customerReducer } from "@/reducer/customerReducer";
+import { usePathname } from "next/navigation";
+import { deleteCustomer } from "@/actions/customer.actions";
 
 interface Props {
   _id: string;
+  onDeleteSuccess: () => void
 }
 
-const DeleteMembers = ({ _id }: Props) => {
+const DeleteMembers = ({ _id, onDeleteSuccess }: Props) => {
+  const pathname = usePathname();
+  const [state, dispatch] = useReducer(customerReducer, INITIAL_STATE);
   const handleDelete = async () => {
     try {
-      const res = await fetch(`/api/customer/${_id}`, {
-        method: "DELETE",
-      });
-      if (res.ok) {
-        window.location.reload();
-      }
+      await deleteCustomer(_id)
+      dispatch({ type: "DELETE_SUCCESS", payload:{_id} });
+      onDeleteSuccess()
     } catch (error) {
       console.log(error);
     }

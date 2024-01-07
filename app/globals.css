@@ -4,6 +4,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 @layer base {
+  h2 {
+    @apply font-semibold text-3xl
+  }
+
   h3 {
     @apply text-white font-bold text-xl tracking-wide
   }
@@ -31,7 +35,7 @@
   }
 
   .bottombar {
-    @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-red-600  p-4 backdrop-blur-lg xs:px-7 md:hidden;
+    @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-[#30353b] shadow-lg  p-4 backdrop-blur-lg xs:px-7 md:hidden;
   }
 
   .bottombar_container {
@@ -39,11 +43,19 @@
   }
 
   .bottombar_link {
-    @apply relative flex flex-col items-center gap-2 rounded-lg p-2 sm:flex-1 sm:px-2 sm:py-2.5;
+    @apply relative  flex flex-col items-center gap-2 rounded-lg p-2 sm:flex-1 sm:px-2 sm:py-2.5;
   }
 
   .action-button {
     @apply bg-[#2d2d2d] hover:bg-slate-300
+  }
+
+  .body-form-field {
+    @apply flex gap-2 items-center
+  }
+
+  .body-parts {
+    @apply bg-neutral-200 max-w-sm px-3 py-2 rounded-xl text-center md:text-start
   }
 
 }
@@ -53,5 +65,15 @@
     width: 3px;
     height: 3px;
     border-radius: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #4F46E5;
+    border-radius: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+    border: none;
   }
 }

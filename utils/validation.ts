@@ -32,3 +32,40 @@ export const formSchema = z.object({
 export const paymentSchema = z.object({
   paymentType: z.nativeEnum(Payment),
 });
+
+export const bodyMeasurementsSchema = z.object({
+  weight: z.number().min(2, { message: "Wrong data format" }),
+  neck: z.number().refine((value) => value >= 0 && value <= 99, {
+    message: "Wrong data format. Please enter a number between 0 and 99.",
+  }),
+  chest: z.number().refine((value) => value >= 0 && value <= 99, {
+    message: "Wrong data format. Please enter a number between 0 and 99.",
+  }),
+  waist: z.number().refine((value) => value >= 0 && value <= 99, {
+    message: "Wrong data format. Please enter a number between 0 and 99.",
+  }),
+  arms: z.object({
+    left: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+    right: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+  }),
+  thight: z.object({
+    left: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+    right: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+  }),
+  calf: z.object({
+    left: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+    right: z.number().refine((value) => value >= 0 && value <= 99, {
+      message: "Wrong data format. Please enter a number between 0 and 99.",
+    }),
+  }),
+});

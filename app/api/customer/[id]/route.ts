@@ -2,36 +2,47 @@ import Customer from "@/model/customer";
 import { connectToDB } from "@/utils/database";
 
 export const PATCH = async (req: Request, { params }: any) => {
-  const { paymentType } = await req.json();
+  const { paymentType, expireDate } = await req.json();
 
   try {
     await connectToDB();
 
     const existingCustomer = await Customer.findById(params.id);
     if (!existingCustomer) {
-      return new Response("Customer does not exist", {
+      return new Response(JSON.stringify({ success: false, error: "Customer does not exist" }), {
         status: 404,
       });
     }
+
     existingCustomer.paymentType = paymentType;
+    existingCustomer.expireDate = expireDate
     await existingCustomer.save();
-    return new Response("Successfully update new payment");
+
+    return new Response(JSON.stringify({ success: true, message: "Successfully updated payment" }));
   } catch (error) {
-    return new Response("Error updating", { status: 500 });
+    console.error("Error updating customer:", error);
+    return new Response(JSON.stringify({ success: false, error: "Error updating customer" }), {
+      status: 500,
+    });
   }
 };
 
-export const DELETE = async(req: Request, {params}: any) => {
+export const DELETE = async (req: Request, { params }: any) => {
+  try {
+    await connectToDB();
 
-    try {
-        await connectToDB()
-        await Customer.findByIdAndDelete(params.id)
-        return new Response("Customers deleted successfully", {
-            status: 200
-        })
-    } catch (error) {
-        return new Response("Cannot delete customers", {
-            status: 500
-        })
+    const deletedCustomer = await Customer.findByIdAndDelete(params.id);
+    if (!deletedCustomer) {
+      return new Response(JSON.stringify({ success: false, error: "Customer not found" }), {
+        status: 404,
+      });
     }
-}
+
+    return new Response(JSON.stringify({ success: true, message: "Customer deleted successfully" }));
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    return new Response(JSON.stringify({ success: false, error: "Error deleting customer" }), {
+      status: 500,
+    });
+  }
+};

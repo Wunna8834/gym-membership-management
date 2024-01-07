@@ -30,13 +30,14 @@ interface Props {
   _id: string
   name: string;
   payment: string;
+  onEditSuccess: () => void
 }
 
-const UserActions = ({_id, name, payment }: Props) => {
+const UserActions = ({_id, name, payment, onEditSuccess}: Props) => {
   return (
     <div className="flex gap-2">
       <Button asChild size="icon" className="action-button">
-        <Link href="/viewMember">
+        <Link href={`/analytics/${_id}`}>
           <Eye color="#7B66FF" />
         </Link>
       </Button>
@@ -46,7 +47,7 @@ const UserActions = ({_id, name, payment }: Props) => {
             <FileSignature color="#EEC759" />
           </Button>
         </DialogTrigger>
-        <EditMember name={name} paymentType={payment} _id={_id} />
+        <EditMember name={name} paymentType={payment} _id={_id} onEditSuccess={onEditSuccess}/>
       </Dialog>
       <AlertDialog>
         <AlertDialogTrigger asChild>
@@ -57,7 +58,7 @@ const UserActions = ({_id, name, payment }: Props) => {
             <Trash2 color="#EF4040" />
           </Button>
         </AlertDialogTrigger>
-        <DeleteMembers _id={_id}/>
+        <DeleteMembers _id={_id} onDeleteSuccess={onEditSuccess}/>
       </AlertDialog>
     </div>
   );

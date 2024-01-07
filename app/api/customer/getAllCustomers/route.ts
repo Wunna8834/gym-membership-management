@@ -11,7 +11,7 @@ export const GET = async (req: Request) => {
     }
     try {
         await connectToDB()
-        const customers = await Customer.find(query).sort({ createdAt: -1 }).populate("name");
+        const customers = await Customer.find(query).sort({ createdAt: -1 }).populate("name").limit(20);
 
         return new Response(JSON.stringify(customers), {
             status: 200
