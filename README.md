@@ -15,6 +15,14 @@ I'm now playing at a gym that keeps track of memberships on many sheets of paper
 
 ----
 
+## Screenshots
+
+![image-20240108162457063](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20240108162457063.png)
+
+![image-20240108162854470](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20240108162854470.png)
+
+![image-20240108162957778](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20240108162957778.png)
+
 ##  Tech stacks ✨
 
 - Next JS 14 (App Router)
