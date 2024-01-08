@@ -17,9 +17,10 @@ I'm now playing at a gym that keeps track of memberships on many sheets of paper
 
 ## Screenshots
 
-![Login Page](/public//assets/Login.png)
+![Login Page](/public/assets/Login.png)
 ![Home Page](/public/assets/Home.png)
-![Profile Page](/public//assets//Profile.png)
+![Profile Page](/public/assets/Profile.png)
+
 
 ##  Tech stacks ✨
 
