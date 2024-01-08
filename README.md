@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Gym Membership Management Web App
 
-## Getting Started
+[Demo Link](https://gym-membership-management.vercel.app/)
 
-First, run the development server:
+## Purpose 🏋🏼
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+I'm now playing at a gym that keeps track of memberships on many sheets of paper. It takes a while to find the relevant document each time we need to make a new payment. As a student of information technology, I would like to help solve this issue by creating a web application that satisfies their needs.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+----
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features 🚀
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Basic **CRUD** features including registering new members, updating current payment type, creating and reading monthly body measurements, deleting existing members
+- Expired date is automatically calculated based on the current date and payment types (1 month, 3 months, ...)
 
-## Learn More
+----
 
-To learn more about Next.js, take a look at the following resources:
+##  Tech stacks ✨
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next JS 14 (App Router)
+- Typescript
+- MongoDB
+- react-hook-form
+- Tailwind, ShadCN
+- Clerk Authentication for Google Auth
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+----
 
-## Deploy on Vercel
+## Key Points 🔑
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- I am using both **route handlers** and **server actions** for CRUD features
+- For client side, data state is controlled with **useReducer** hook in the Table Component
+- For form components, states are controlled with **react-hook-form**, schemas are defined with **zod**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## Future Plan 🔮
+
+All of the functionality in this app, which is in Version One, are CRUD functions. Charts and graphs showing the progression of physically growth will be published in the future. Additionally, the app is divided into admin and users. Users can monitor their body progress, exercises, and the quantity of weights they played with in the previous week, such as 1 kg or 2 kg, while the admin can control the management procedures.
